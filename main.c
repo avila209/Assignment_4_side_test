@@ -53,6 +53,8 @@ void CookItUp() {
 }
 
 void *Kitchen(void *argument){
+    srand(time(NULL));
+
     while(total_meal_count <= 200){
             usleep(10000);
             CookItUp();
