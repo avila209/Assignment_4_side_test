@@ -53,10 +53,7 @@ void CookItUp() {
 }
 
 void *Kitchen(void *argument){
-    pthread_mutex_lock(&Chef_Mutex);
     while(total_meal_count <= 200){
-            //pthread_cond_wait(&customer_rings_bell, &Chef_Mutex);     //Currently not initializing from some reason
-
             usleep(10000);
             CookItUp();
             if(food[0] == 0){ // Hamburger = Customer 2 + 3
@@ -383,11 +380,8 @@ void *Kitchen(void *argument){
             }
         }
 
-        if(total_meal_count >= 200){
-            pthread_exit(NULL);
-        }
+        pthread_cond_wait(&customer_rings_bell, &Chef_Mutex);     //Currently not initializing from some reason
     }
-    pthread_mutex_unlock(&Chef_Mutex);
 }
 
 void *WaitingRoom1(void *argument){
