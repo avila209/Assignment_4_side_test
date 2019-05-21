@@ -626,6 +626,8 @@ void *Kitchen(void *argument){
     printf("Customer 3 ate %d times. \n", meal_count_c3);
 
     pthread_mutex_unlock(&Chef_Mutex);
+
+    pthread_exit(NULL);
 }
 
 void *WaitingRoom1(void *argument){
@@ -647,6 +649,7 @@ void *WaitingRoom1(void *argument){
     }
 
     pthread_mutex_unlock(&Customer1_Mutex);
+    pthread_exit(NULL);
 }
 
 void *WaitingRoom2(void *argument){
@@ -668,6 +671,7 @@ void *WaitingRoom2(void *argument){
     }
 
     pthread_mutex_unlock(&Customer2_Mutex);
+    pthread_exit(NULL);
 }
 
 void *WaitingRoom3(void *argument){
@@ -689,6 +693,7 @@ void *WaitingRoom3(void *argument){
     }
 
     pthread_mutex_unlock(&Customer3_Mutex);
+    pthread_exit(NULL);
 }
 
 
@@ -706,10 +711,6 @@ int main() {
     pthread_join(Customer2, NULL);
     pthread_join(Customer3, NULL);
     pthread_join(Chef, NULL);
-
-    printf("Customer 1 ate %d times. \n", meal_count_c1);
-    printf("Customer 2 ate %d times. \n", meal_count_c2);
-    printf("Customer 3 ate %d times. \n", meal_count_c3);
 
     return 0;
 }
