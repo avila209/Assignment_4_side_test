@@ -32,8 +32,6 @@ bool received_fries_3 = false;
 bool received_hamburger_2 = false;
 bool received_hamburger_3 = false;
 
-bool chef_clocked_out = false;
-
 void CookItUp() {
     food[0] = rand() % 3;
     bool unique = false;
@@ -624,7 +622,6 @@ void *Kitchen(void *argument){
         }
     }
 
-    chef_clocked_out = true;
     printf("My shift over coach\n");
     printf("Customer 1 ate %d times. \n", meal_count_c1);
     printf("Customer 2 ate %d times. \n", meal_count_c2);
@@ -652,7 +649,7 @@ void *WaitingRoom1(void *argument){
         if (received_fries_1 && received_soda_1) {
             meal_count_c1++;
             printf("Customer 1 is eating\n");
-            //usleep(10000);
+            usleep(1000);
             printf("Customer 1 just ate, total meals = %d\n", meal_count_c1);
             received_fries_1 = false;
             received_soda_1 = false;
@@ -676,7 +673,7 @@ void *WaitingRoom2(void *argument){
         if (received_hamburger_2 && received_soda_2) {
             meal_count_c2++;
             printf("Customer 2 is eating\n");
-            //usleep(10000);
+            usleep(1000);
             printf("Customer 2 just ate, total meals = %d\n", meal_count_c2);
             received_hamburger_2 = false;
             received_soda_2 = false;
@@ -699,7 +696,7 @@ void *WaitingRoom3(void *argument){
         if (received_hamburger_3 && received_fries_3) {
             meal_count_c3++;
             printf("Customer 3 is eating\n");
-            //usleep(10000);
+            usleep(1000);
             printf("Customer 3 just ate, total meals = %d\n", meal_count_c3);
             received_hamburger_3 = false;
             received_fries_3 = false;
