@@ -663,8 +663,6 @@ void *WaitingRoom2(void *argument){
         }
     }
 
-    pthread_cond_signal(&customer2_done_eating);
-
     pthread_mutex_unlock(&Customer2_Mutex);
 }
 
@@ -696,15 +694,15 @@ int main() {
 
     pthread_t Chef, Customer1, Customer2, Customer3;
 
+    pthread_create(&Chef, NULL, &Kitchen, NULL);
     pthread_create(&Customer1, NULL, &WaitingRoom1, NULL);
     pthread_create(&Customer2, NULL, &WaitingRoom2, NULL);
     pthread_create(&Customer3, NULL, &WaitingRoom3, NULL);
-    pthread_create(&Chef, NULL, &Kitchen, NULL);
 
+    pthread_join(Chef, NULL);
     pthread_join(Customer1, NULL);
     pthread_join(Customer2, NULL);
     pthread_join(Customer3, NULL);
-    pthread_join(Chef, NULL);
 
     printf("Customer 1 ate %d times. \n", meal_count_c1);
     printf("Customer 2 ate %d times. \n", meal_count_c2);
