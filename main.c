@@ -641,6 +641,8 @@ void *WaitingRoom1(void *argument){
         }
     }
 
+    pthread_cond_signal(&customer1_done_eating);
+
     pthread_mutex_unlock(&Customer1_Mutex);
 }
 
@@ -660,6 +662,8 @@ void *WaitingRoom2(void *argument){
             pthread_cond_signal(&customer2_done_eating);
         }
     }
+
+    pthread_cond_signal(&customer2_done_eating);
 
     pthread_mutex_unlock(&Customer2_Mutex);
 }
@@ -681,11 +685,15 @@ void *WaitingRoom3(void *argument){
         }
     }
 
+    pthread_cond_signal(&customer3_done_eating);
+
     pthread_mutex_unlock(&Customer3_Mutex);
 }
 
 
 int main() {
+    srand(time(NULL));
+
     pthread_t Chef, Customer1, Customer2, Customer3;
 
     pthread_create(&Customer1, NULL, &WaitingRoom1, NULL);
