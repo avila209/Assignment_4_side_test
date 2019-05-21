@@ -29,8 +29,6 @@ bool received_hamburger_2 = false;
 bool received_hamburger_3 = false;
 
 void CookItUp() {
-    //srand(time(NULL));
-
     food[0] = rand() % 3;
     bool unique = false;
     int temp;
@@ -59,7 +57,7 @@ void *Kitchen(void *argument){
     while(total_meal_count <= 200){
             //pthread_cond_wait(&customer_rings_bell, &Chef_Mutex);     //Currently not initializing from some reason
 
-            usleep(100000);
+            usleep(10000);
             CookItUp();
             if(food[0] == 0){ // Hamburger = Customer 2 + 3
                 if(meal_count_c2 == meal_count_c3){                     //Might need to add checkers to see if customer already has item.
@@ -80,12 +78,38 @@ void *Kitchen(void *argument){
                     }
                 }
                 else if(meal_count_c2 > meal_count_c3){
-                    received_hamburger_3 = true;
-                    pthread_cond_signal(&food_ready_customer3);
+                    if(received_hamburger_2 == true && received_hamburger_3 == false){
+                        received_hamburger_3 = true;
+                        pthread_cond_signal(&food_ready_customer3);
+                    }
+                    else if(received_hamburger_3 == true && received_hamburger_2 == false){
+                        received_hamburger_2 = true;
+                        pthread_cond_signal(&food_ready_customer2);
+                    }
+                    else if(received_hamburger_2 == false && received_hamburger_3 == false){
+                        received_hamburger_3 = true;
+                        pthread_cond_signal(&food_ready_customer3);
+                    }
+                    else{
+                        printf("Throwing hamburger away \n");
+                    }
                 }
                 else{
-                    received_hamburger_2 = true;
-                    pthread_cond_signal(&food_ready_customer2);
+                    if(received_hamburger_2 == true && received_hamburger_3 == false){
+                        received_hamburger_3 = true;
+                        pthread_cond_signal(&food_ready_customer3);
+                    }
+                    else if(received_hamburger_3 == true && received_hamburger_2 == false){
+                        received_hamburger_2 = true;
+                        pthread_cond_signal(&food_ready_customer2);
+                    }
+                    else if(received_hamburger_2 == false && received_hamburger_3 == false){
+                        received_hamburger_2 = true;
+                        pthread_cond_signal(&food_ready_customer2);
+                    }
+                    else{
+                        printf("Throwing hamburger away \n");
+                    }
                 }
             }
 
@@ -108,12 +132,38 @@ void *Kitchen(void *argument){
                     }
                 }
                 else if(meal_count_c1 > meal_count_c3){
-                    received_fries_3 = true;
-                    pthread_cond_signal(&food_ready_customer3);
+                    if(received_fries_1 == true && received_fries_3 == false){
+                        received_fries_3 = true;
+                        pthread_cond_signal(&food_ready_customer3);
+                    }
+                    else if(received_fries_3 == true && received_fries_1 == false){
+                        received_fries_1 = true;
+                        pthread_cond_signal(&food_ready_customer1);
+                    }
+                    else if(received_fries_1 == false && received_fries_3 == false){
+                        received_fries_3 = true;
+                        pthread_cond_signal(&food_ready_customer3);
+                    }
+                    else{
+                        printf("Throwing fries away \n");
+                    }
                 }
                 else{
-                    received_fries_1 = true;
-                    pthread_cond_signal(&food_ready_customer1);
+                    if(received_fries_1 == true && received_fries_3 == false){
+                        received_fries_3 = true;
+                        pthread_cond_signal(&food_ready_customer3);
+                    }
+                    else if(received_fries_3 == true && received_fries_1 == false){
+                        received_fries_1 = true;
+                        pthread_cond_signal(&food_ready_customer1);
+                    }
+                    else if(received_fries_1 == false && received_fries_3 == false){
+                        received_fries_1 = true;
+                        pthread_cond_signal(&food_ready_customer1);
+                    }
+                    else{
+                        printf("Throwing fries away \n");
+                    }
                 }
             }
 
@@ -136,73 +186,23 @@ void *Kitchen(void *argument){
                     }
                 }
                 else if(meal_count_c1 > meal_count_c2){
-                    received_soda_2 = true;
-                    pthread_cond_signal(&food_ready_customer2);
-                }
-                else{
-                    received_soda_1 = true;
-                    pthread_cond_signal(&food_ready_customer1);
-                }
-            }
-
-            if(food[1] == 0){ // Hamburger = Customer 2 + 3
-                if(meal_count_c2 == meal_count_c3){
-                    if(received_hamburger_2 == true && received_hamburger_3 == false){
-                        received_hamburger_3 = true;
-                        pthread_cond_signal(&food_ready_customer3);
-                    }
-                    else if(received_hamburger_3 == true && received_hamburger_2 == false){
-                        received_hamburger_2 = true;
+                    if(received_soda_1 == true && received_soda_2 == false){
+                        received_soda_2 = true;
                         pthread_cond_signal(&food_ready_customer2);
                     }
-                    else if(received_hamburger_2 == false && received_hamburger_3 == false){
-                        received_hamburger_2 = true;
+                    else if(received_soda_2 == true && received_soda_1 == false){
+                        received_soda_1 = true;
+                        pthread_cond_signal(&food_ready_customer1);
+                    }
+                    else if(received_soda_1 == false && received_soda_2 == false){
+                        received_soda_2 = true;
                         pthread_cond_signal(&food_ready_customer2);
                     }
                     else{
-                        printf("Throwing hamburger away \n");
+                        printf("Throwing soda away \n");
                     }
-                }
-                else if(meal_count_c2 > meal_count_c3){
-                    received_hamburger_3 = true;
-                    pthread_cond_signal(&food_ready_customer3);
                 }
                 else{
-                    received_hamburger_2 = true;
-                    pthread_cond_signal(&food_ready_customer2);
-                }
-            }
-
-            else if(food[1] == 1){ // Fries = Customer 1 + 3
-                if(meal_count_c1 == meal_count_c3){
-                    if(received_fries_1 == true && received_fries_3 == false){
-                        received_fries_3 = true;
-                        pthread_cond_signal(&food_ready_customer3);
-                    }
-                    else if(received_fries_3 == true && received_fries_1 == false){
-                        received_fries_1 = true;
-                        pthread_cond_signal(&food_ready_customer1);
-                    }
-                    else if(received_fries_1 == false && received_fries_3 == false){
-                        received_fries_1 = true;
-                        pthread_cond_signal(&food_ready_customer1);
-                    }
-                    else{
-                        printf("Throwing fries away \n");
-                    }
-                }
-                else if(meal_count_c1 > meal_count_c3){
-                    received_fries_3 = true;
-                    pthread_cond_signal(&food_ready_customer3);
-                }
-                else{
-                    received_fries_1 = true;
-                    pthread_cond_signal(&food_ready_customer1);
-                }
-            }
-
-            else if(food[1] == 2) { // Soda = Customer 1 + 2
-                if (meal_count_c1 == meal_count_c2) {
                     if(received_soda_1 == true && received_soda_2 == false){
                         received_soda_2 = true;
                         pthread_cond_signal(&food_ready_customer2);
@@ -219,18 +219,171 @@ void *Kitchen(void *argument){
                         printf("Throwing soda away \n");
                     }
                 }
-                else if (meal_count_c1 > meal_count_c2) {
+            }
+
+        if(food[1] == 0){ // Hamburger = Customer 2 + 3
+            if(meal_count_c2 == meal_count_c3){                     //Might need to add checkers to see if customer already has item.
+                if(received_hamburger_2 == true && received_hamburger_3 == false){
+                    received_hamburger_3 = true;
+                    pthread_cond_signal(&food_ready_customer3);
+                }
+                else if(received_hamburger_3 == true && received_hamburger_2 == false){
+                    received_hamburger_2 = true;
+                    pthread_cond_signal(&food_ready_customer2);
+                }
+                else if(received_hamburger_2 == false && received_hamburger_3 == false){
+                    received_hamburger_2 = true;
+                    pthread_cond_signal(&food_ready_customer2);
+                }
+                else{
+                    printf("Throwing hamburger away \n");
+                }
+            }
+            else if(meal_count_c2 > meal_count_c3){
+                if(received_hamburger_2 == true && received_hamburger_3 == false){
+                    received_hamburger_3 = true;
+                    pthread_cond_signal(&food_ready_customer3);
+                }
+                else if(received_hamburger_3 == true && received_hamburger_2 == false){
+                    received_hamburger_2 = true;
+                    pthread_cond_signal(&food_ready_customer2);
+                }
+                else if(received_hamburger_2 == false && received_hamburger_3 == false){
+                    received_hamburger_3 = true;
+                    pthread_cond_signal(&food_ready_customer3);
+                }
+                else{
+                    printf("Throwing hamburger away \n");
+                }
+            }
+            else{
+                if(received_hamburger_2 == true && received_hamburger_3 == false){
+                    received_hamburger_3 = true;
+                    pthread_cond_signal(&food_ready_customer3);
+                }
+                else if(received_hamburger_3 == true && received_hamburger_2 == false){
+                    received_hamburger_2 = true;
+                    pthread_cond_signal(&food_ready_customer2);
+                }
+                else if(received_hamburger_2 == false && received_hamburger_3 == false){
+                    received_hamburger_2 = true;
+                    pthread_cond_signal(&food_ready_customer2);
+                }
+                else{
+                    printf("Throwing hamburger away \n");
+                }
+            }
+        }
+
+        else if(food[1] == 1){ // Fries = Customer 1 + 3
+            if(meal_count_c1 == meal_count_c3){
+                if(received_fries_1 == true && received_fries_3 == false){
+                    received_fries_3 = true;
+                    pthread_cond_signal(&food_ready_customer3);
+                }
+                else if(received_fries_3 == true && received_fries_1 == false){
+                    received_fries_1 = true;
+                    pthread_cond_signal(&food_ready_customer1);
+                }
+                else if(received_fries_1 == false && received_fries_3 == false){
+                    received_fries_1 = true;
+                    pthread_cond_signal(&food_ready_customer1);
+                }
+                else{
+                    printf("Throwing fries away \n");
+                }
+            }
+            else if(meal_count_c1 > meal_count_c3){
+                if(received_fries_1 == true && received_fries_3 == false){
+                    received_fries_3 = true;
+                    pthread_cond_signal(&food_ready_customer3);
+                }
+                else if(received_fries_3 == true && received_fries_1 == false){
+                    received_fries_1 = true;
+                    pthread_cond_signal(&food_ready_customer1);
+                }
+                else if(received_fries_1 == false && received_fries_3 == false){
+                    received_fries_3 = true;
+                    pthread_cond_signal(&food_ready_customer3);
+                }
+                else{
+                    printf("Throwing fries away \n");
+                }
+            }
+            else{
+                if(received_fries_1 == true && received_fries_3 == false){
+                    received_fries_3 = true;
+                    pthread_cond_signal(&food_ready_customer3);
+                }
+                else if(received_fries_3 == true && received_fries_1 == false){
+                    received_fries_1 = true;
+                    pthread_cond_signal(&food_ready_customer1);
+                }
+                else if(received_fries_1 == false && received_fries_3 == false){
+                    received_fries_1 = true;
+                    pthread_cond_signal(&food_ready_customer1);
+                }
+                else{
+                    printf("Throwing fries away \n");
+                }
+            }
+        }
+
+        else if(food[1] == 2){ // Soda = Customer 1 + 2
+            if(meal_count_c1 == meal_count_c2){
+                if(received_soda_1 == true && received_soda_2 == false){
                     received_soda_2 = true;
                     pthread_cond_signal(&food_ready_customer2);
                 }
-                else {
+                else if(received_soda_2 == true && received_soda_1 == false){
                     received_soda_1 = true;
                     pthread_cond_signal(&food_ready_customer1);
                 }
+                else if(received_soda_1 == false && received_soda_2 == false){
+                    received_soda_1 = true;
+                    pthread_cond_signal(&food_ready_customer1);
+                }
+                else{
+                    printf("Throwing soda away \n");
+                }
             }
+            else if(meal_count_c1 > meal_count_c2){
+                if(received_soda_1 == true && received_soda_2 == false){
+                    received_soda_2 = true;
+                    pthread_cond_signal(&food_ready_customer2);
+                }
+                else if(received_soda_2 == true && received_soda_1 == false){
+                    received_soda_1 = true;
+                    pthread_cond_signal(&food_ready_customer1);
+                }
+                else if(received_soda_1 == false && received_soda_2 == false){
+                    received_soda_2 = true;
+                    pthread_cond_signal(&food_ready_customer2);
+                }
+                else{
+                    printf("Throwing soda away \n");
+                }
+            }
+            else{
+                if(received_soda_1 == true && received_soda_2 == false){
+                    received_soda_2 = true;
+                    pthread_cond_signal(&food_ready_customer2);
+                }
+                else if(received_soda_2 == true && received_soda_1 == false){
+                    received_soda_1 = true;
+                    pthread_cond_signal(&food_ready_customer1);
+                }
+                else if(received_soda_1 == false && received_soda_2 == false){
+                    received_soda_1 = true;
+                    pthread_cond_signal(&food_ready_customer1);
+                }
+                else{
+                    printf("Throwing soda away \n");
+                }
+            }
+        }
     }
     pthread_mutex_unlock(&Chef_Mutex);
-    pthread_exit(NULL);
 }
 
 void *WaitingRoom1(void *argument){
@@ -241,8 +394,8 @@ void *WaitingRoom1(void *argument){
 
         if (received_fries_1 && received_soda_1) {
             printf("Customer 1 is eating\n");
-            usleep(1000);
-            printf("Customer 1 just ate\n");
+            //usleep(1000);
+            printf("Customer 1 just ate, total meals = %d\n", meal_count_c1);
             received_fries_1 = false;
             received_soda_1 = false;
             meal_count_c1++;
@@ -253,7 +406,6 @@ void *WaitingRoom1(void *argument){
     }
 
     pthread_mutex_unlock(&Customer1_Mutex);
-    pthread_exit(NULL);
 }
 
 void *WaitingRoom2(void *argument){
@@ -264,8 +416,8 @@ void *WaitingRoom2(void *argument){
 
         if (received_hamburger_2 && received_soda_2) {
             printf("Customer 2 is eating\n");
-            usleep(1000);
-            printf("Customer 2 just ate\n");
+            //usleep(1000);
+            printf("Customer 2 just ate, total meals = %d\n", meal_count_c2);
             received_hamburger_2 = false;
             received_soda_2 = false;
             meal_count_c2++;
@@ -276,7 +428,6 @@ void *WaitingRoom2(void *argument){
     }
 
     pthread_mutex_unlock(&Customer2_Mutex);
-    pthread_exit(NULL);
 }
 
 void *WaitingRoom3(void *argument){
@@ -286,9 +437,9 @@ void *WaitingRoom3(void *argument){
         pthread_cond_wait(&food_ready_customer3, &Customer3_Mutex); //Wait until their food is ready
 
         if(received_hamburger_3 && received_fries_3){
-            printf("Customer 2 is eating\n");
-            usleep(1000);
-            printf("Customer 2 just ate\n");
+            printf("Customer 3 is eating\n");
+            //usleep(1000);
+            printf("Customer 3 just ate, total meals = %d\n", meal_count_c3);
             received_hamburger_3 = false;
             received_fries_3 = false;
             meal_count_c3++;
@@ -300,7 +451,6 @@ void *WaitingRoom3(void *argument){
     }
 
     pthread_mutex_unlock(&Customer3_Mutex);
-    pthread_exit(NULL);
 }
 
 
