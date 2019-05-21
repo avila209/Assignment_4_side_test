@@ -389,18 +389,18 @@ void *Kitchen(void *argument){
 void *WaitingRoom1(void *argument){
     pthread_mutex_lock(&Customer1_Mutex);
 
-    while(total_meal_count <= 190) {
+    while(total_meal_count <= 200) {
         pthread_cond_wait(&food_ready_customer1, &Customer1_Mutex); //Wait until their food is ready
 
         if (received_fries_1 && received_soda_1) {
             printf("Customer 1 is eating\n");
-            //usleep(1000);
+            usleep(100000);
             printf("Customer 1 just ate, total meals = %d\n", meal_count_c1);
             received_fries_1 = false;
             received_soda_1 = false;
             meal_count_c1++;
         } else {
-            //bell_rang = true;
+            printf("Bell rang \n");
             pthread_cond_signal(&customer_rings_bell);
         }
     }
@@ -411,18 +411,18 @@ void *WaitingRoom1(void *argument){
 void *WaitingRoom2(void *argument){
     pthread_mutex_lock(&Customer2_Mutex);
 
-    while(total_meal_count <= 190) {
+    while(total_meal_count <= 200) {
         pthread_cond_wait(&food_ready_customer2, &Customer2_Mutex); //Wait until their food is ready
 
         if (received_hamburger_2 && received_soda_2) {
             printf("Customer 2 is eating\n");
-            //usleep(1000);
+            usleep(100000);
             printf("Customer 2 just ate, total meals = %d\n", meal_count_c2);
             received_hamburger_2 = false;
             received_soda_2 = false;
             meal_count_c2++;
         } else {
-            //bell_rang = true;
+            printf("Bell rang \n");
             pthread_cond_signal(&customer_rings_bell);
         }
     }
@@ -433,19 +433,19 @@ void *WaitingRoom2(void *argument){
 void *WaitingRoom3(void *argument){
     pthread_mutex_lock(&Customer3_Mutex);
 
-    while(total_meal_count <= 190){
+    while(total_meal_count <= 200){
         pthread_cond_wait(&food_ready_customer3, &Customer3_Mutex); //Wait until their food is ready
 
         if(received_hamburger_3 && received_fries_3){
             printf("Customer 3 is eating\n");
-            //usleep(1000);
+            usleep(100000);
             printf("Customer 3 just ate, total meals = %d\n", meal_count_c3);
             received_hamburger_3 = false;
             received_fries_3 = false;
             meal_count_c3++;
         }
         else{
-            //bell_rang = true;
+            printf("Bell rang \n");
             pthread_cond_signal(&customer_rings_bell);
         }
     }
