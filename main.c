@@ -618,8 +618,12 @@ void *Kitchen(void *argument){
                 }
             }
         }
-
     }
+
+    printf("My shift over coach\n");
+    printf("Customer 1 ate %d times. \n", meal_count_c1);
+    printf("Customer 2 ate %d times. \n", meal_count_c2);
+    printf("Customer 3 ate %d times. \n", meal_count_c3);
 
     pthread_mutex_unlock(&Chef_Mutex);
 }
@@ -628,6 +632,7 @@ void *WaitingRoom1(void *argument){
     pthread_mutex_lock(&Customer1_Mutex);
 
     while(total_meal_count < 200) {
+        printf("Customer 1 is waiting\n");
         pthread_cond_wait(&food_ready_customer1, &Customer1_Mutex); //Wait until their food is ready
 
         if (received_fries_1 && received_soda_1) {
@@ -641,8 +646,6 @@ void *WaitingRoom1(void *argument){
         }
     }
 
-    pthread_cond_signal(&customer1_done_eating);
-
     pthread_mutex_unlock(&Customer1_Mutex);
 }
 
@@ -650,6 +653,7 @@ void *WaitingRoom2(void *argument){
     pthread_mutex_lock(&Customer2_Mutex);
 
     while(total_meal_count < 200) {
+        printf("Customer 1 is waiting\n");
         pthread_cond_wait(&food_ready_customer2, &Customer2_Mutex); //Wait until their food is ready
 
         if (received_hamburger_2 && received_soda_2) {
@@ -669,10 +673,11 @@ void *WaitingRoom2(void *argument){
 void *WaitingRoom3(void *argument){
     pthread_mutex_lock(&Customer3_Mutex);
 
-    while(total_meal_count < 200){
+    while(total_meal_count < 200) {
+        printf("Customer 1 is waiting\n");
         pthread_cond_wait(&food_ready_customer3, &Customer3_Mutex); //Wait until their food is ready
 
-        if(received_hamburger_3 && received_fries_3){
+        if (received_hamburger_3 && received_fries_3) {
             meal_count_c3++;
             printf("Customer 3 is eating\n");
             usleep(10000);
@@ -683,8 +688,6 @@ void *WaitingRoom3(void *argument){
         }
     }
 
-    pthread_cond_signal(&customer3_done_eating);
-
     pthread_mutex_unlock(&Customer3_Mutex);
 }
 
@@ -694,15 +697,15 @@ int main() {
 
     pthread_t Chef, Customer1, Customer2, Customer3;
 
-    pthread_create(&Chef, NULL, &Kitchen, NULL);
     pthread_create(&Customer1, NULL, &WaitingRoom1, NULL);
     pthread_create(&Customer2, NULL, &WaitingRoom2, NULL);
     pthread_create(&Customer3, NULL, &WaitingRoom3, NULL);
+    pthread_create(&Chef, NULL, &Kitchen, NULL);
 
-    pthread_join(Chef, NULL);
     pthread_join(Customer1, NULL);
     pthread_join(Customer2, NULL);
     pthread_join(Customer3, NULL);
+    pthread_join(Chef, NULL);
 
     printf("Customer 1 ate %d times. \n", meal_count_c1);
     printf("Customer 2 ate %d times. \n", meal_count_c2);
