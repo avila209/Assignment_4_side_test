@@ -382,6 +382,10 @@ void *Kitchen(void *argument){
                 }
             }
         }
+
+        if(total_meal_count >= 200){
+            pthread_exit(NULL);
+        }
     }
     pthread_mutex_unlock(&Chef_Mutex);
 }
