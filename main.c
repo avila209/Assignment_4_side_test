@@ -393,7 +393,7 @@ void *Kitchen(void *argument){
 void *WaitingRoom1(void *argument){
     pthread_mutex_lock(&Customer1_Mutex);
 
-    while(total_meal_count <= 200) {
+    while(total_meal_count <= 190) {
         pthread_cond_wait(&food_ready_customer1, &Customer1_Mutex); //Wait until their food is ready
 
         if (received_fries_1 && received_soda_1) {
@@ -415,7 +415,7 @@ void *WaitingRoom1(void *argument){
 void *WaitingRoom2(void *argument){
     pthread_mutex_lock(&Customer2_Mutex);
 
-    while(total_meal_count <= 200) {
+    while(total_meal_count <= 190) {
         pthread_cond_wait(&food_ready_customer2, &Customer2_Mutex); //Wait until their food is ready
 
         if (received_hamburger_2 && received_soda_2) {
@@ -437,7 +437,7 @@ void *WaitingRoom2(void *argument){
 void *WaitingRoom3(void *argument){
     pthread_mutex_lock(&Customer3_Mutex);
 
-    while(total_meal_count <= 200){
+    while(total_meal_count <= 190){
         pthread_cond_wait(&food_ready_customer3, &Customer3_Mutex); //Wait until their food is ready
 
         if(received_hamburger_3 && received_fries_3){
